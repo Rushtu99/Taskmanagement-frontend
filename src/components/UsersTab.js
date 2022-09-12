@@ -1,69 +1,67 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setUser, removeUser, setTasks, setAdmin } from "../reducers/userSlice";
-import { setData, removeData, toggleShow } from "../reducers/toastSlice";
-import AuthService from "../services/api";
-import { Card, Button, Dropdown, NavDropdown, Navbar } from "react-bootstrap";
-import TaskToast from "./AssignTaskToast";
+import { setData, toggleShowTask, toggleShowRole } from "../reducers/toastSlice";
+import { Card, Button } from "react-bootstrap";
+import TaskModal from "./AssignTaskModal";
+import RoleModal from "./AssignRoleModal";
+import { useState } from "react";
+
 export const UsersTab = () => {
   let users = useSelector((state) => state.allUsers);
+  let user = useSelector((state) => state.user);
   let toast = useSelector((state) => state.toast);
+  let sea = useSelector((state) => state.search);
+  const [searchParam] = useState(["name", "id"]);
+
   let dispatch = useDispatch();
 
-  let cal = (data) => {
-    if (!toast.show) {
-      dispatch(setData(data));
-      dispatch(toggleShow());
-    } else {
-      if (data == toast.data) {
-        dispatch(toggleShow());
-      } else {
+
+  function search(items) {
+    return items.filter((item) => {
+      return searchParam.some((newItem) => {
+        return (
+          item[newItem].toString().toLowerCase().indexOf(sea.data.toLowerCase()) > -1
+        );
+      });
+    });
+  }
+
+  let checkTaskRole = (data) => {
+    if (user.admin || user.data.id === data.id) {
+      if (!toast.showTask) {
         dispatch(setData(data));
+        dispatch(toggleShowTask());
+      } else {
+        if (data === toast.data) {
+          dispatch(toggleShowTask());
+        } else {
+          dispatch(setData(data));
+        }
       }
     }
-    console.log("hello");
   };
 
+  let checkRoleRole = (data) => {
+    if (user.admin) {
+      if (!toast.showTask) {
+        dispatch(setData(data));
+        dispatch(toggleShowRole());
+      } else {
+        if (data === toast.data) {
+          dispatch(toggleShowRole());
+        } else {
+          dispatch(setData(data));
+        }
+      }
+    }
+  };
+  
   return (
     <div>
-      <TaskToast></TaskToast>
-      {users.data.map((user) => (
+      <TaskModal/>
+      <RoleModal/>
+      {search(users.data).map((user) => (
         <Card key={user.id} className="task-card">
-          {/* <Navbar
-          variant="dark"
-          bg="dark"
-          style={{ color: "white", padding: "15px" }}
-          expand="lg"
-        >
-          <div>
-            <Dropdown>
-              <Dropdown.Toggle variant="dark" id="dropdown-basic">
-                Dropdown Button
-              </Dropdown.Toggle>
-              <Dropdown.Menu>
-                <NavDropdown.Item href="#/action-1">
-                  Action
-                </NavDropdown.Item>
-                <NavDropdown.Item href="#/action-2">
-                  Another action
-                </NavDropdown.Item>
-                <NavDropdown.Item href="#/action-3">
-                  Something else
-                </NavDropdown.Item>
-              </Dropdown.Menu>
-            </Dropdown>
-            <Button
-              variant="outline-dark"
-              style={{ color: "grey" }}
-              onClick={()=>{cal()}}
-            >
-              change status
-            </Button>
-          </div>
-          <div style={{ marginLeft: "auto" }}>
-            By: {user.assigned_by_name}{" "}
-          </div>
-        </Navbar> */}
           <Card body>
             <Card.Title>
               <div className="float">
@@ -71,13 +69,22 @@ export const UsersTab = () => {
                   <div style={{ fontSize: 15 }}>ID:{user.id}</div>
                   <div>Name: {user.name} </div>
                 </div>
-                <div style={{ marginLeft: "auto" }}>
+                <div style={{ marginLeft: "auto"}}>
                   {" "}
                   <Button
                     variant="outline-dark"
-                    style={{ color: "grey" }}
+                    style={{ color: "grey", marginRight:"5x" }}
                     onClick={() => {
-                      cal(user);
+                      checkRoleRole(user);
+                    }}
+                  >
+                    Role
+                  </Button>
+                  <Button
+                    variant="outline-dark"
+                    style={{ color: "grey",marginLeft:"5px" }}
+                    onClick={() => {
+                      checkTaskRole(user);
                     }}
                   >
                     Assign Task

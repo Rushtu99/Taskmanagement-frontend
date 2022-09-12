@@ -1,27 +1,34 @@
-import React, { useState } from "react";
+import React, { useRef } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
+import ReCAPTCHA from "react-google-recaptcha";
 
 export const Login = () => {
+  const captchaRef = useRef(null);
   const navigate = useNavigate();
 
-  const Login = (event) => {
+  const Login = async (event) => {
     event.preventDefault();
-    let promise = api.login(event);
-    promise.then((res) => {
-      console.log(res);
-      if (res && res.data.access_token) {
-        navigate("/Dashboard", { replace: true });
+    const token = captchaRef.current.getValue();
+    captchaRef.current.reset();
+
+    api.captcha(token).then((res) => {
+      if (res.data.success) {
+        api.login(event).then((res) => {
+          if (res && res.data.access_token) {
+            navigate("/Loading", { replace: true });
+          }
+        });
       }
     });
   };
 
-  const renderForm = (
-    <div>
+  return (
+    <div className="login-form">
       <div className="form">
-        <Form id="login-form" class="mb-3" onSubmit={Login}>
+        <Form id="login-form" className="mb-3" onSubmit={Login}>
           <div className="input-container">
             <Form.Label>Email </Form.Label>
             <input type="email" name="email" required />
@@ -30,10 +37,17 @@ export const Login = () => {
             <Form.Label>Password </Form.Label>
             <input type="password" name="password" required />
           </div>
+          <div>
+            <ReCAPTCHA
+              sitekey="6LfeJfAhAAAAAFYM59JLNsh0tzy_M3qdpapLTGU-"
+              ref={captchaRef}
+            />
+            {/* {token} */}
+          </div>
           <div className="button-container">
             <Button
-             variant="outline-dark"
-             style={{ color: "white" ,border:' 1px solid white'}}
+              variant="outline-dark"
+              style={{ color: "white", border: " 1px solid white" }}
               type="submit"
             >
               LOGIN
@@ -42,7 +56,7 @@ export const Login = () => {
           <div className="button-container">
             <Button
               variant="outline-dark"
-              style={{ color: "white" ,border:' 1px solid white'}}
+              style={{ color: "white", border: " 1px solid white" }}
               onClick={() => {
                 navigate("/Register", { replace: true });
               }}
@@ -54,6 +68,4 @@ export const Login = () => {
       </div>
     </div>
   );
-
-  return <div className="login-form">{renderForm}</div>;
 };

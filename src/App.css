@@ -11,17 +11,16 @@
 }
 
 .item{
-  padding: 1px;
-  background-color: aquamarine;
+  padding: 2px;
 }
 .item2{
-  padding: 1px;
-  background-color:burlywood;
+  padding: 2px;
 }
 
 .float{
   display:flex;
   size:10px;
+  gap:10px;
   /* justify-content: space-between; */
 }
 
@@ -42,6 +41,7 @@
   background-color: rgba(33,37,41,1) !important;
 }
 
+input[type="email"],
 input[type="text"],
 input[type="password"] {
   height: 30px;
@@ -90,6 +90,15 @@ input[type="submit"]:hover {
   margin-right: 1rem;
 }
 
+.home-container {
+  display:flex;
+  justify-content: center;
+  background-color: rgb(73, 73, 73);
+  padding: 2rem;
+  margin: 1rem;
+  gap: 3rem;
+}
+
 .login-form {
   margin:1rem;
   margin-left: 10rem;
@@ -117,8 +126,32 @@ input[type="submit"]:hover {
 }
 
 .input-container {
+  width: auto;
   display: flex;
-  flex-direction: column;
+  justify-content:center ;
+  flex-direction: row;
   gap: 15px;
   margin: 10px;
 }
+
+.modal-container {
+  /* background-color: rgb(73, 73, 73); */
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  margin: 8px;
+  padding:2px;
+}
+
+.modal-button-container{
+  display:flex;
+  flex-direction: row;
+  justify-content: center;
+  background-color: rgb(73, 73, 73);
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  
+}
+

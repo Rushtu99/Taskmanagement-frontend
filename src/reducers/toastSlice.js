@@ -4,7 +4,8 @@ export const toastSlice = createSlice({
   name: "toast",
   initialState: {
     data: {},
-    show:false
+    showTask:false,
+    showRole:false
   },
   reducers: {
     setData: (state,action) => {
@@ -13,11 +14,14 @@ export const toastSlice = createSlice({
     removeData: (state) => {
       state.data = {};
     },
-    toggleShow:(state)=>{
-        state.show = !state.show;
-    }
+    toggleShowTask:(state)=>{
+        state.showTask = !state.showTask;
+    },
+    toggleShowRole:(state)=>{
+      state.showRole = !state.showRole;
+  }
   },
 });
 
-export const { setData, removeData, toggleShow } = toastSlice.actions;
+export const { setData, removeData, toggleShowTask , toggleShowRole} = toastSlice.actions;
 export default toastSlice.reducer;

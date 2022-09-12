@@ -1,19 +1,39 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import api from "../services/api";
 
+export const getAllUsers = createAsyncThunk("allUsers/getAllUsers",async () => {
+    let res = await api.getAllUsers();
+    return res.data;
+  }
+);
 export const allUsersSlice = createSlice({
   name: "allUsers",
   initialState: {
-    data: {},
+    data: [],
   },
   reducers: {
-    setUsers: (state, action) => {
+    setAllUsers: (state, action) => {
       state.data = action.payload;
     },
-    removeUsers: (state) => {
-      state.data = {};
+    removeAllUsers: (state) => {
+      state.data = [];
+    },
+  },
+  extraReducers: {
+    [getAllUsers.pending]: (state, action) => {
+      state.status = "pending";
+    },
+    [getAllUsers.fulfilled]: (state, action) => {
+      console.log("gggg")
+      state.data = action.payload;
+
+      state.status = "fulfilled";
+    },
+    [getAllUsers.rejected]: (state, action) => {
+      state.status = "rejected";
     },
   },
 });
 
-export const { setUsers, removeUsers } = allUsersSlice.actions;
+export const { setAllUsers, removeAllUsers } = allUsersSlice.actions;
 export default allUsersSlice.reducer;

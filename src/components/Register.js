@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import Button from "react-bootstrap/Button";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
@@ -6,15 +6,12 @@ import api from "../services/api";
 export const Register = () => {
   const navigate = useNavigate();
 
-  const Register = (event) => {
+  const Register = async(event) => {
     event.preventDefault();
-    let promise = api.register(event);
-    promise.then((res) => {
+     let res = await api.register(event);
       if (res.data) {
         navigate("/Login", { replace: true });
       }
-      console.log(res);
-    });
   };
 
   const renderForm = (

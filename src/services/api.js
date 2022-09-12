@@ -1,10 +1,111 @@
-import userEvent from "@testing-library/user-event";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import moment from "moment";
 
 const api_url = "http://localhost:8000/api/";
 export default new (class AuthService {
+  async verifyEmail() {
+    console.log("verifying Email");
+    let token = JSON.parse(localStorage.getItem("user")).access_token;
+    let data = null;
+    let config = {
+      params: {},
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    };
+    try {
+      const res = await axios.post(
+        "http://localhost:8000/email/verify",
+        data,
+        config
+      );
+      return res;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async verifyEmailReq() {
+    console.log("calling verify Email");
+    let token = JSON.parse(localStorage.getItem("user")).access_token;
+    let data = null;
+    let config = {
+      params: {},
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    };
+    try {
+      const res = await axios.post(
+        "http://localhost:8000/email/request-verification",
+        data,
+        config
+      );
+      return res;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async resetPassword(e) {
+    console.log("calling reset password");
+    let email = e.target[0].value;
+    let password = e.target[1].value;
+    let password_confirmation = e.target[2].value;
+
+    const urlToken = new URL(window.location.href);
+    const token = urlToken.searchParams.get("token");
+
+    let data = null;
+
+    let config = {
+      params: {
+        password,
+        password_confirmation,
+        token,
+        email,
+      },
+
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    };
+    try {
+      const res = await axios.post(
+        "http://localhost:8000/password/reset",
+        data,
+        config
+      );
+      return res;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async resetPasswordReq(e) {
+    console.log("calling reset password");
+    console.log(e);
+    let token = JSON.parse(localStorage.getItem("user")).access_token;
+    let data = null;
+    let config = {
+      params: {
+        email: e,
+      },
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    };
+    try {
+      const res = await axios.post(
+        "http://localhost:8000/password/reset-request",
+        data,
+        config
+      );
+      return res;
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   async isAdmin() {
     console.log("calling isAdmin");
@@ -52,12 +153,17 @@ export default new (class AuthService {
     let e = event.target[1].value;
     let p = event.target[2].value;
 
+    console.log(u);
+    console.log(e);
+    console.log(p);
+
     let data = null;
     let config = {
       params: {
         name: u,
         email: e,
         password: p,
+        role: 1,
       },
     };
 
@@ -126,23 +232,19 @@ export default new (class AuthService {
       },
     };
 
-    try {
-      const res = await axios.post(api_url + "me", data, config);
-      //console.log(res);
-      return res;
-    } catch (err) {
-      console.log(err);
-    }
+  
+    const res = await axios.post(api_url + "me", data, config);
+    return res;
   }
 
-  async changeStatus(task,stat) {
+  async changeStatus(task, stat) {
     //console.log(stat);
     let token = JSON.parse(localStorage.getItem("user")).access_token;
     let data = null;
     let config = {
       params: {
         ...task,
-        status_change_to:stat,
+        status_change_to: stat,
       },
       headers: {
         Authorization: "Bearer " + token,
@@ -150,8 +252,74 @@ export default new (class AuthService {
     };
     //console.log(config);
     try {
-      console.log(task)
-      const res = await axios.put(api_url + "changeStatus", data, config);
+      console.log(task);
+      const res = await axios.post(api_url + "changeStatus", data, config);
+      return res;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async changeRole(role, to) {
+    //console.log(stat);
+    let token = JSON.parse(localStorage.getItem("user")).access_token;
+    let data = null;
+    let config = {
+      params: {
+        to,
+        role_change_to: role,
+      },
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    };
+    //console.log(config);
+    try {
+      //console.log(config)
+      const res = await axios.post(api_url + "changeRole", data, config);
+      return res;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async captcha(ref) {
+    let data = null;
+    let config = {
+      params: {
+        ref,
+      },
+      headers: {
+        Authorization: "Bearer ",
+      },
+    };
+    try {
+      const res = await axios.post(api_url + "captcha", data, config);
+      return res;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  async createTask(title,due_date,desc, to) {
+    let token = JSON.parse(localStorage.getItem("user")).access_token;
+
+    console.log("calling create task");
+   
+
+    let data = null;
+    let config = {
+      params: {
+        title,
+        due_date: moment(due_date).utc().format("YYYY-MM-DD HH:mm:ss"),
+        desc,
+        assigned_to: to,
+      },
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    };
+    try {
+      const res = await axios.post(api_url + "createTask", data, config);
       return res;
     } catch (err) {
       console.log(err);
@@ -169,16 +337,42 @@ export default new (class AuthService {
         Authorization: "Bearer " + token,
       },
     };
-
-    try {
-      const res = await axios.post(api_url + "showTasks", data, config);
-      return res;
-    } catch (err) {
-      console.log(err);
-    }
+    const res = await axios.post(api_url + "showTasks", data, config);
+    return res;
   }
 
-  async getUsers() {
+  async deleteTask(id){
+    let token = JSON.parse(localStorage.getItem("user")).access_token;
+    console.log("calling deleteTask");
+
+    let data = null;
+    let config = {
+      params: {},
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    };
+    const res = await axios.post(api_url + 'deleteTask/' + id, data, config);
+    return res;
+  }
+
+  async getAllTasks() {
+    let token = JSON.parse(localStorage.getItem("user")).access_token;
+    console.log("calling getAllTasks");
+
+    let data = null;
+    let config = {
+      params: {},
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    };
+      let res = await axios.post(api_url + "showAllTasks", data, config);
+      console.log(res);
+      return res;
+  }
+
+  async getAllUsers() {
     let token = JSON.parse(localStorage.getItem("user")).access_token;
 
     console.log("calling get Users");
@@ -198,6 +392,4 @@ export default new (class AuthService {
       console.log(err);
     }
   }
-
-  
 })();

@@ -21,16 +21,19 @@
   display:flex;
   size:10px;
   gap:10px;
+  margin-bottom: 10px;
   /* justify-content: space-between; */
 }
 
 .task-card{
   /* border:1px slid; */
   margin-bottom:10px;
+
   /* display: flex; */
   /* flex-direction: column; */
   /* background-color: red; */
 }
+
 
 .refresh{
   size: 20px;
@@ -155,3 +158,44 @@ input[type="submit"]:hover {
   
 }
 
+.paginator{
+  display: flex;
+  font-size:25px;
+  /* background-color: bisque; */
+  gap:80px;
+  justify-content: center;
+  align-items: center;
+}
+
+.container-custom{
+  border:2px solid rgb(189, 189, 189);
+  border-radius: 4px;
+
+  margin:10px;
+  padding: 10px;
+}
+
+
+.button-nav{
+  display:flex;
+flex-direction:row;
+}
+
+.bubble-notif{
+  position: absolute;
+  top: -5px;
+  right: 0px;
+  padding: 2px 5px 2px 6px;
+ color: yellowgreen;
+background-color: rgb(40, 40, 40);
+  font-size: 0.75em;
+  border: 1px solid rgb(50,50,50);
+
+  border-radius: 40%;
+  /* display: none; */
+}
+.container-notif{
+  position: relative;
+	display: inline-block;
+
+}

@@ -3,6 +3,7 @@ import { Modal, Dropdown, NavDropdown } from "react-bootstrap";
 import { toggleShowRole } from "../reducers/toastSlice";
 import { setAllUsers } from "../reducers/allUsersSlice";
 import { useSelector, useDispatch } from "react-redux";
+import { getAllUsers } from "../reducers/allUsersSlice";
 import api from "../services/api";
 
 const AssignRoleModal = () => {
@@ -18,13 +19,14 @@ const AssignRoleModal = () => {
   ];
   let toast = useSelector((state) => state.toast);
   let user = useSelector((state) => state.user);
+  let search = useSelector((state)=>state.search);
+  let paginator = useSelector((state)=>state.paginator);
   let dispatch = useDispatch();
 
   let set = async (role_id, user) => {
     if (user.role !== role_id) {
       await api.changeRole(role_id, user.data.id);
-      let res = await api.getAllUsers();
-      dispatch(setAllUsers(res.data));
+      // dispatch(getAllUsers(paginator.page));
       handleClose();
     }
   };

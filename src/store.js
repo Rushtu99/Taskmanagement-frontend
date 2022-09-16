@@ -6,6 +6,9 @@ import allUsersReducer from "./reducers/allUsersSlice";
 import allTasksReducer from "./reducers/allTasksSlice";
 import toastReducer from "./reducers/toastSlice";
 import searchReducer from "./reducers/searchSlice";
+import paginatorReducer from "./reducers/paginatorSlice";
+import notifReducer from "./reducers/notifSlice";
+
 export const mystore = configureStore({
   reducer: {
     user: userReducer,
@@ -13,6 +16,8 @@ export const mystore = configureStore({
     allUsers: allUsersReducer,
     allTasks: allTasksReducer,
     toast: toastReducer,
-    search: searchReducer
+    search: searchReducer,
+    paginator: paginatorReducer,
+    notif: notifReducer,
   },
 });

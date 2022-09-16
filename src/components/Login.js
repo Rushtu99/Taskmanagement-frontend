@@ -18,7 +18,7 @@ export const Login = () => {
       if (res.data.success) {
         api.login(event).then((res) => {
           if (res && res.data.access_token) {
-            navigate("/Loading", { replace: true });
+            navigate("/refresh", { replace: true });
           }
         });
       }
@@ -37,7 +37,7 @@ export const Login = () => {
             <Form.Label>Password </Form.Label>
             <input type="password" name="password" required />
           </div>
-          <div>
+          <div style={{display:"flex", justifyContent:"center"}}>
             <ReCAPTCHA
               sitekey="6LfeJfAhAAAAAFYM59JLNsh0tzy_M3qdpapLTGU-"
               ref={captchaRef}

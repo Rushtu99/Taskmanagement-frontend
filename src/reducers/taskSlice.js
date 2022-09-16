@@ -1,32 +1,23 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../services/api";
-
+import { useSelector } from "react-redux";
 export const getTasks = createAsyncThunk(
   "task/getTasks",
-  async (obj, { dispatch, getState }) => {
-    let { user } = getState();
-    let res = await api.getTasks(user.data.id);
-    if (res.status === 200) {
-      let a = 0;
-      let b = 0;
-      let c = 0;
-      console.log("updating tasks");
-      res.data.map((t) => {
-        if (t.status === "assigned") {
-          a++;
-        }
-        if (t.status === "In Progress") {
-          b++;
-        }
-        if (t.status === "Completed") {
-          c++;
-        }
-      });
-      dispatch(setCountAssigned(a));
-      dispatch(setCountInProgress(b));
-      dispatch(setCountCompleted(c));
-    }
-    return res.data;
+  async (page,{ dispatch,getState }) => {
+    const state = getState();
+
+    let t = await api.getTasks(page,state.search.data);
+    api.stats('to').then((res)=>{
+      dispatch(setCountAssignedTo(res.data[0]));
+      dispatch(setCountInProgressTo(res.data[1]));
+      dispatch(setCountCompletedTo(res.data[2]));
+    })
+    api.stats('by').then((res)=>{
+      dispatch(setCountAssignedBy(res.data[0]));
+      dispatch(setCountInProgressBy(res.data[1]));
+      dispatch(setCountCompletedBy(res.data[2]));
+    })
+    return t.data;
   }
 );
 
@@ -35,7 +26,12 @@ export const taskSlice = createSlice({
 
   initialState: {
     data: [],
-    count: {
+    to: {
+      assigned: 0,
+      inProgress: 0,
+      completed: 0,
+    },
+    by: {
       assigned: 0,
       inProgress: 0,
       completed: 0,
@@ -47,16 +43,25 @@ export const taskSlice = createSlice({
       state.data = action.payload;
     },
     removeTasks: (state) => {
-      state.data = {};
+      state.data = [];
     },
-    setCountAssigned: (state, action) => {
-      state.count.assigned = action.payload;
+    setCountAssignedTo: (state, action) => {
+      state.to.assigned = action.payload;
     },
-    setCountInProgress: (state, action) => {
-      state.count.inProgress = action.payload;
+    setCountInProgressTo: (state, action) => {
+      state.to.inProgress = action.payload;
     },
-    setCountCompleted: (state, action) => {
-      state.count.completed = action.payload;
+    setCountCompletedTo: (state, action) => {
+      state.to.completed = action.payload;
+    },
+    setCountAssignedBy: (state, action) => {
+      state.by.assigned = action.payload;
+    },
+    setCountInProgressBy: (state, action) => {
+      state.by.inProgress = action.payload;
+    },
+    setCountCompletedBy: (state, action) => {
+      state.by.completed = action.payload;
     },
   },
   extraReducers: {
@@ -76,8 +81,11 @@ export const taskSlice = createSlice({
 export const {
   setTasks,
   removeTasks,
-  setCountAssigned,
-  setCountInProgress,
-  setCountCompleted,
+  setCountAssignedTo,
+  setCountInProgressTo,
+  setCountCompletedTo,
+  setCountAssignedBy,
+  setCountInProgressBy,
+  setCountCompletedBy,
 } = taskSlice.actions;
 export default taskSlice.reducer;

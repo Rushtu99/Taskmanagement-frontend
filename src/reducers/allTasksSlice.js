@@ -1,10 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { useSelector } from "react-redux";
 import api from "../services/api";
 
 export const getAllTasks = createAsyncThunk(
   "allTasks/getAllTasks",
-  async () => {
-    let res = await api.getAllTasks();
+  async (page,{getState}) => {
+
+    const state = getState();
+    let res = await api.getAllTasks(page,state.search.data);
     return res.data;
   }
 );
@@ -19,7 +22,7 @@ export const allTasksSlice = createSlice({
       state.data = action.payload;
     },
     removeAllTasks: (state) => {
-      state.data = {};
+      state.data = [];
     },
   },
   extraReducers: {

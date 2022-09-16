@@ -1,8 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import api from "../services/api";
+import { useSelector } from "react-redux";
+export const getAllUsers = createAsyncThunk("allUsers/getAllUsers",async (page,{getState}) => {
 
-export const getAllUsers = createAsyncThunk("allUsers/getAllUsers",async () => {
-    let res = await api.getAllUsers();
+  const state = getState();
+
+    let res = await api.getAllUsers(page,state.search.data);
     return res.data;
   }
 );
@@ -24,7 +27,6 @@ export const allUsersSlice = createSlice({
       state.status = "pending";
     },
     [getAllUsers.fulfilled]: (state, action) => {
-      console.log("gggg")
       state.data = action.payload;
 
       state.status = "fulfilled";

@@ -3,7 +3,6 @@ import { Form, Button, Modal } from "react-bootstrap";
 import { toggleShowTask } from "../reducers/toastSlice";
 import { useSelector, useDispatch } from "react-redux";
 import api from "../services/api";
-// import moment from "moment";
 import { getTasks } from "../reducers/taskSlice";
 
 const AssignTaskModal = () => {
@@ -11,26 +10,21 @@ const AssignTaskModal = () => {
   let user = useSelector((state) => state.user)
   let dispatch = useDispatch();
 
-    // let print = (e)=>{
-    //   e.preventDefault();
-    //   let  t = moment(e.target[1].value).utc().format("YYYY-MM-DD HH:mm:ss");
-    // }
-
     let handleSubmit= async(event,to)=>{
       event.preventDefault();
-      event.currentTarget.disabled = true;
+      // event.currentTarget.disabled = true;
       let t = event.target[0].value;
       let dd = event.target[1].value;
       let d = event.target[2].value;
       let res = await api.createTask(t,dd,d,to);
-      dispatch(getTasks());
+      console.log(res);
       if(res.data.title){
-        handleClose();
+        dispatch(toggleShowTask())
       }
-      event.currentTarget.disabled = false;
     }
 
     let handleClose=()=>{
+      console.log("called");
       dispatch(toggleShowTask())
     }
 

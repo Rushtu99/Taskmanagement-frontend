@@ -6,6 +6,8 @@ import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import { mystore } from './store';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import Offcanvas from 'react-bootstrap/Offcanvas';
+
 
 
 

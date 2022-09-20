@@ -9,6 +9,7 @@ import { setPage } from "../reducers/paginatorSlice";
 import NavbarMain from "./Navbar";
 import Paginator from "./Paginator";
 import moment from "moment";
+import { setSort } from "../reducers/searchSlice";
 
 export const TasksTab = () => {
   let tasks = useSelector((state) => state.task);
@@ -38,6 +39,13 @@ export const TasksTab = () => {
       await api.changeStatus(task, stat);
       await dispatch(getTasks());
     }
+  };
+
+  let handleSort = (sort) => {
+    dispatch(setSort(sort));
+    dispatch(getTasks());
+    dispatch(setSort(sort));
+    dispatch(setPage(1));
   };
 
   // function search(items) {
@@ -73,7 +81,56 @@ export const TasksTab = () => {
     <div>
       <NavbarMain />
       <div className="container-custom">
-        <h2>Tasks</h2>
+        <div className="float">
+          <div>
+            <h2>Tasks</h2>
+          </div>
+          <div style={{ marginLeft: "auto" }}>
+            <Dropdown>
+              <Dropdown.Toggle variant="dark" id="dropdown-basic">
+                {sea.sort}
+              </Dropdown.Toggle>
+              <Dropdown.Menu>
+                <NavDropdown.Item
+                  onClick={() => {
+                    handleSort("Title");
+                  }}
+                >
+                  Title
+                </NavDropdown.Item>
+                <NavDropdown.Item
+                  onClick={() => {
+                    handleSort("Due Date");
+                  }}
+                >
+                  Due Date
+                </NavDropdown.Item>
+                <NavDropdown.Item
+                  onClick={() => {
+                    handleSort("Assigned By");
+                  }}
+                >
+                  Assigned By
+                </NavDropdown.Item>
+                <NavDropdown.Item
+                  onClick={() => {
+                    handleSort("Assigned To");
+                  }}
+                >
+                  Assigned To
+                </NavDropdown.Item>
+                <NavDropdown.Item
+                  onClick={() => {
+                    handleSort("Status");
+                  }}
+                >
+                  Status
+                </NavDropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </div>
+        </div>
+
         {showPage ? (
           tasks.data.data.map((task) => (
             <Card key={task.id} className="task-card">
@@ -128,7 +185,7 @@ export const TasksTab = () => {
                 </div>
               </Navbar>
               <Card body>
-                <Card.Body style={{padding:"0"}}>
+                <Card.Body style={{ padding: "0" }}>
                   <div className="float">
                     <div>Status: {task.status} </div>
                     <h5 style={{ marginLeft: "auto" }}>

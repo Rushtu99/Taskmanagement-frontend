@@ -23,7 +23,6 @@ const NavbarMain = () => {
   const notif = useSelector((state) => state.notif);
   const [showData, setShowData] = useState(false);
 
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const LogOut = async () => {
@@ -74,10 +73,11 @@ const NavbarMain = () => {
         dispatch(getAllTasks(paginator.page));
       }
     });
-    await dispatch(getNotifs()).then(()=>{
-      console.log("true");
-      setShowData(true);
-    })
+    await dispatch(getNotifs()).then((res) => {
+      if (res.payload.data.length !== 0) {
+        setShowData(true);
+      }
+    });
     await dispatch(getTasks(paginator.page));
     await dispatch(getAllUsers(paginator.page));
   }
@@ -101,17 +101,17 @@ const NavbarMain = () => {
           style={{
             backgroundColor: "rgb(33,37,41)",
             color: "white",
-            marginTop: "21px",
-            marginBottom:"21px"
+            marginTop: "19px",
+            marginBottom: "19px",
           }}
           closeButton
         >
           <Offcanvas.Title>
-            <h4>Notifications</h4>
+            <h3>Notifications</h3>
           </Offcanvas.Title>
         </Offcanvas.Header>
-        <Offcanvas.Body style={{padding:"0px"}}>
-         <Notifications/>
+        <Offcanvas.Body style={{ padding: "0px" }}>
+          <Notifications />
         </Offcanvas.Body>
       </Offcanvas>
       <Navbar
@@ -170,7 +170,9 @@ const NavbarMain = () => {
                 {" "}
                 Notifications
               </Button>
-              {showData && <span className="bubble-notif">{notif.data.total}</span>}
+              {showData && (
+                <span className="bubble-notif">{notif.data.total}</span>
+              )}
             </div>
             <Button variant="dark" onClick={init}>
               {" "}

@@ -324,14 +324,15 @@ export default new (class AuthService {
     }
   }
 
-  async getTasks(page,search) {
+  async getTasks(page,search,sort) {
     let token = JSON.parse(localStorage.getItem("user")).access_token;
 
     let data = null;
     let config = {
       params: {
         page,
-        search
+        search,
+        sort,
       },
       headers: {
         Authorization: "Bearer " + token,
@@ -355,14 +356,15 @@ export default new (class AuthService {
     return res;
   }
 
-  async getAllTasks(page,search) {
+  async getAllTasks(page,search,sort) {
     let token = JSON.parse(localStorage.getItem("user")).access_token;
 
     let data = null;
     let config = {
       params: {
         page,
-        search
+        search,
+        sort,
       },
       headers: {
         Authorization: "Bearer " + token,

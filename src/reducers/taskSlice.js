@@ -6,7 +6,7 @@ export const getTasks = createAsyncThunk(
   async (page,{ dispatch,getState }) => {
     const state = getState();
 
-    let t = await api.getTasks(page,state.search.data);
+    let t = await api.getTasks(page,state.search.data,state.search.sort);
     api.stats('to').then((res)=>{
       dispatch(setCountAssignedTo(res.data[0]));
       dispatch(setCountInProgressTo(res.data[1]));

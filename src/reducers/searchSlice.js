@@ -4,6 +4,7 @@ export const searchSlice = createSlice({
   name: "search",
   initialState: {
     data: "",
+    sort:"Due Date"
   },
 
   reducers: {
@@ -13,8 +14,11 @@ export const searchSlice = createSlice({
     removeSearch: (state) => {
       state.data = {};
     },
+    setSort: (state, action) => {
+      state.sort = action.payload;
+    },
   },
 });
 
-export const { setSearch } = searchSlice.actions;
+export const { setSearch,removeSearch,setSort } = searchSlice.actions;
 export default searchSlice.reducer;

@@ -5,7 +5,7 @@ import api from "../services/api";
 import NavbarMain from "./Navbar";
 import { Analytics } from "./Analytics";
 import taskSlice from "../reducers/taskSlice";
-import {toggleShow} from "../reducers/notifSlice";
+import { toggleShow } from "../reducers/notifSlice";
 import moment from "moment";
 
 export const ProfileTab = () => {
@@ -26,11 +26,11 @@ export const ProfileTab = () => {
   if (user.data.email_verified_at) {
     check = (
       <div className="float">
-        <div>Email_verified: </div>
+        <div>Email verified at: </div>
         <div className="item2">
           {" "}
           {moment(moment.utc(user.data.email_verified_at).toDate()).format(
-            "YYYY-MM-DD HH:mm:ss"
+            "YYYY-MM-DD"
           )}
         </div>
       </div>
@@ -52,11 +52,8 @@ export const ProfileTab = () => {
     );
   }
 
- 
-
   return (
     <div>
-     
       <NavbarMain />
       <div className="container-custom">
         <h2>Profile</h2>
@@ -74,11 +71,11 @@ export const ProfileTab = () => {
             <div className="item2">{user.data.email}</div>
           </div>
           <div className="float">
-            <div className="item">created_at: </div>
+            <div className="item">Account created at: </div>
             <div className="item2">
               {" "}
               {moment(moment.utc(user.data.created_at).toDate()).format(
-                "YYYY-MM-DD HH:mm:ss"
+                "YYYY-MM-DD"
               )}
             </div>
           </div>

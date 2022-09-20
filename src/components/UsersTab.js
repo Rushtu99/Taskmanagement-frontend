@@ -5,7 +5,7 @@ import {
   toggleShowTask,
   toggleShowRole,
 } from "../reducers/toastSlice";
-import { Card, Button } from "react-bootstrap";
+import { Card, Button, Dropdown, NavDropdown } from "react-bootstrap";
 import TaskModal from "./AssignTaskModal";
 import RoleModal from "./AssignRoleModal";
 import { useState } from "react";
@@ -13,6 +13,7 @@ import { setPage } from "../reducers/paginatorSlice";
 import { getAllUsers } from "../reducers/allUsersSlice";
 import NavbarMain from "./Navbar";
 import Paginator from "./Paginator";
+import { setSort } from "../reducers/searchSlice";
 
 export const UsersTab = () => {
   let users = useSelector((state) => state.allUsers);
@@ -101,12 +102,14 @@ export const UsersTab = () => {
       <TaskModal />
       <RoleModal />
       <div className="container-custom">
-        <h2>Users</h2>
+        <div className="float">
+          <h2>Users</h2>
+        </div>
         {showPage ? (
-          (users.data.data).map((user) => (
+          users.data.data.map((user) => (
             <Card key={user.id} className="task-card">
               <Card body>
-                <Card.Body style={{padding:"0"}}>
+                <Card.Body style={{ padding: "0" }}>
                   <div className="float">
                     <div>
                       <div style={{ fontSize: 15 }}>ID:{user.id}</div>

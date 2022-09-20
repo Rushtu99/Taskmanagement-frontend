@@ -7,6 +7,7 @@ import { getAllTasks } from "../reducers/allTasksSlice";
 import { setPage } from "../reducers/paginatorSlice";
 import NavbarMain from "./Navbar";
 import Paginator from "./Paginator";
+import { setSort } from "../reducers/searchSlice";
 
 export const AdminTab = () => {
   // const [searchParam] = useState([
@@ -85,6 +86,13 @@ export const AdminTab = () => {
       .then(dispatch(getAllTasks()));
   };
 
+  let handleSort = (sort) => {
+    dispatch(setSort(sort));
+    dispatch(getAllTasks());
+    dispatch(setSort(sort));
+    dispatch(setPage(1));
+  };
+
   let handleCheck = (e) => {
     let id = e.target.id;
     if (checkedState.includes(id)) {
@@ -94,7 +102,6 @@ export const AdminTab = () => {
       setCheckedState((checkedState) => copy);
       console.log(checkedState);
 
-      
       if (checkedState.length == 1) {
         setShowBulk(false);
       }
@@ -106,121 +113,170 @@ export const AdminTab = () => {
 
   return (
     <div>
-      <NavbarMain/>
-      <h2>Admin</h2>
+      <NavbarMain />
       <div className="container-custom">
-
-      {showBulk && (
-        <div style={{ display: "flex", marginBottom: "20px" }}>
-          <div>BULK ACTION</div>
-          <div style={{ display: "flex", marginLeft: "auto", gap: "10px" }}>
-            <Button variant="dark" onClick={handleDeleteBulk}>
-              Go
-            </Button>
+        <div className="float">
+          <h2>Admin</h2>
+          <div style={{ marginLeft: "auto" }}>
             <Dropdown>
               <Dropdown.Toggle variant="dark" id="dropdown-basic">
-                {bulkAction}
+                {sea.sort}
               </Dropdown.Toggle>
               <Dropdown.Menu>
                 <NavDropdown.Item
                   onClick={() => {
-                    setBulkAction("InProgress");
+                    handleSort("Title");
                   }}
                 >
-                  In Progress
+                  Title
                 </NavDropdown.Item>
                 <NavDropdown.Item
                   onClick={() => {
-                    setBulkAction("Completed");
+                    handleSort("Due Date");
                   }}
                 >
-                  Completed
+                  Due Date
                 </NavDropdown.Item>
                 <NavDropdown.Item
                   onClick={() => {
-                    setBulkAction("Deleted");
+                    handleSort("Assigned By");
                   }}
                 >
-                  Deleted
+                  Assigned By
+                </NavDropdown.Item>
+                <NavDropdown.Item
+                  onClick={() => {
+                    handleSort("Assigned To");
+                  }}
+                >
+                  Assigned To
+                </NavDropdown.Item>
+                <NavDropdown.Item
+                  onClick={() => {
+                    handleSort("Status");
+                  }}
+                >
+                  Status
                 </NavDropdown.Item>
               </Dropdown.Menu>
+
             </Dropdown>
           </div>
         </div>
-      )}
-      {showPage ?
-        ((allTasks.data.data)).map((task) => (
-          <Card key={task.id} className="task-card">
-            <Navbar
-              variant="dark"
-              bg="dark"
-              style={{
-                color: "white",
-                paddingLeft: "10px",
-                paddingRight: "10px",
-                paddingTop: "1px",
-                paddingBottom: "1px",
-              }}
-              expand="lg"
-            >
-              <div style={{ marginRight: "10px" }}>
-                <input
-                  style={{ width: "18px", height: "18px" }}
-                  id={task.id}
-                  type="checkbox"
-                  onChange={(e) => {
-                    handleCheck(e);
-                  }}
-                />
-              </div>
-
-              <div>
-                <h4>{task.title}</h4>
-              </div>
-              <div>
-                <Dropdown>
-                  <Dropdown.Toggle variant="dark" id="dropdown-basic">
-                    ChangeStatus
-                  </Dropdown.Toggle>
-                  <Dropdown.Menu>
-                    <NavDropdown.Item
-                      onClick={() => {
-                        set("In Progress", task);
-                      }}
-                    >
-                      In Progress
-                    </NavDropdown.Item>
-                    <NavDropdown.Item
-                      onClick={() => {
-                        set("Completed", task);
-                      }}
-                    >
-                      Completed
-                    </NavDropdown.Item>
-                  </Dropdown.Menu>
-                </Dropdown>
-              </div>
-
-              <div style={{ marginLeft: "auto" }}>
-                To: {task.assigned_to_name} By: {task.assigned_by_name}{" "}
-              </div>
-            </Navbar>
-            <Card body>
-              <Card.Body style={{padding:"0"}}>
-                <div className="float">
-                  <div>Status: {task.status} </div>
-                  <h5 style={{ marginLeft: "auto" }}>
-                    Deadline: {task.due_date}
-                  </h5>
+        {showBulk && (
+          <div style={{ display: "flex", marginBottom: "20px" }}>
+            <div>BULK ACTION</div>
+            <div style={{ display: "flex", marginLeft: "auto", gap: "10px" }}>
+              <Button variant="dark" onClick={handleDeleteBulk}>
+                Go
+              </Button>
+              <Dropdown>
+                <Dropdown.Toggle variant="dark" id="dropdown-basic">
+                  {bulkAction}
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <NavDropdown.Item
+                    onClick={() => {
+                      setBulkAction("InProgress");
+                    }}
+                  >
+                    In Progress
+                  </NavDropdown.Item>
+                  <NavDropdown.Item
+                    onClick={() => {
+                      setBulkAction("Completed");
+                    }}
+                  >
+                    Completed
+                  </NavDropdown.Item>
+                  <NavDropdown.Item
+                    onClick={() => {
+                      setBulkAction("Deleted");
+                    }}
+                  >
+                    Deleted
+                  </NavDropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+            </div>
+          </div>
+        )}
+        {showPage ? (
+          allTasks.data.data.map((task) => (
+            <Card key={task.id} className="task-card">
+              <Navbar
+                variant="dark"
+                bg="dark"
+                style={{
+                  color: "white",
+                  paddingLeft: "10px",
+                  paddingRight: "10px",
+                  paddingTop: "1px",
+                  paddingBottom: "1px",
+                }}
+                expand="lg"
+              >
+                <div style={{ marginRight: "10px" }}>
+                  <input
+                    style={{ width: "18px", height: "18px" }}
+                    id={task.id}
+                    type="checkbox"
+                    onChange={(e) => {
+                      handleCheck(e);
+                    }}
+                  />
                 </div>
-              </Card.Body>
-              {task.desc}
+
+                <div>
+                  <h4>{task.title}</h4>
+                </div>
+                <div>
+                  <Dropdown>
+                    <Dropdown.Toggle variant="dark" id="dropdown-basic">
+                      ChangeStatus
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                      <NavDropdown.Item
+                        onClick={() => {
+                          set("In Progress", task);
+                        }}
+                      >
+                        In Progress
+                      </NavDropdown.Item>
+                      <NavDropdown.Item
+                        onClick={() => {
+                          set("Completed", task);
+                        }}
+                      >
+                        Completed
+                      </NavDropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                </div>
+
+                <div style={{ marginLeft: "auto" }}>
+                  To: {task.assigned_to_name} By: {task.assigned_by_name}{" "}
+                </div>
+              </Navbar>
+              <Card body>
+                <Card.Body style={{ padding: "0" }}>
+                  <div className="float">
+                    <div>Status: {task.status} </div>
+                    <h5 style={{ marginLeft: "auto" }}>
+                      Deadline: {task.due_date}
+                    </h5>
+                  </div>
+                </Card.Body>
+                {task.desc}
+              </Card>
             </Card>
-          </Card>
-          // </div>
-        )) : <h1>Loading....</h1>}
-      {showPage && <Paginator type="admin" last = {allTasks.data.last_page}/>}
-    </div>
+            // </div>
+          ))
+        ) : (
+          <h1>Loading....</h1>
+        )}
+        {showPage && <Paginator type="admin" last={allTasks.data.last_page} />}
+      </div>
     </div>
   );
 };

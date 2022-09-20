@@ -7,7 +7,7 @@ export const getAllTasks = createAsyncThunk(
   async (page,{getState}) => {
 
     const state = getState();
-    let res = await api.getAllTasks(page,state.search.data);
+    let res = await api.getAllTasks(page,state.search.data,state.search.sort);
     return res.data;
   }
 );

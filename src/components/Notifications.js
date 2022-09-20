@@ -27,8 +27,8 @@ const Notifications = () => {
               marginBottom: "6px",
               marginLeft: "2px",
               marginRight: "2px",
-
-              border: "2px solid black",
+              border: "1px solid black",
+              borderRadius:"5px",
               backgroundColor: "red",
               fontSize: "14px",
             }}
